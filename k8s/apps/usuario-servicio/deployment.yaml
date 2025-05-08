@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usuario-servicio
+  labels:
+    app: usuario-servicio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usuario-servicio
+  template:
+    metadata:
+      labels:
+        app: usuario-servicio
+    spec:
+      containers:
+        - name: usuario-servicio
+          image: formidata/usuario-servicio:v1.0.0
+          ports:
+            - containerPort: 8080
