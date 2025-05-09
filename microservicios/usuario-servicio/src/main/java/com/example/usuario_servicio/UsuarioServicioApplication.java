@@ -15,7 +15,7 @@ public class UsuarioServicioApplication {
 
 	@GetMapping("/")
 	public String home() {
-		return "¡Hola desde el servicio de usuario!";
+		return "Cambio efectuado y visto!";
 	}
-	
+
 }
