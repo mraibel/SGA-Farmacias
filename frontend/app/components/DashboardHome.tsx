@@ -6,6 +6,7 @@ export default function DashboardHome() {
             <h1 className='text-4xl font-bold'>Sistema de Gestión Administrativa de Farmacias</h1>
             <p>Bienvenido al Sistema de Gestión Administrativas de Farmacias</p>
             <p>cambio hecho con ci/cd</p>
+            <p>otrooo cambiooo</p>
         </main>
     )
 }
