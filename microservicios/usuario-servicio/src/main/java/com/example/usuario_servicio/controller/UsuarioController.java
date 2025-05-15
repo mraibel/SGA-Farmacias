@@ -32,6 +32,7 @@ public class UsuarioController {
         usuarioService.eliminar(id);
     }
 
+    
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Optional<Usuario> usuarioOpt = usuarioService.login(loginRequest.getCorreo(), loginRequest.getContrasena());
