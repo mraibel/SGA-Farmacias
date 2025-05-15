@@ -18,7 +18,7 @@ export default function LoginForm() {
         // Simulate a login request
         setTimeout(() => {
             setIsLoading(false)
-            fetch('/api/users', {
+            fetch('http://localhost:8082/api/usuarios/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
