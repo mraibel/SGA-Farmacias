@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    const isLoggedIn: boolean = true
+    const isLoggedIn: boolean = false
     if (isLoggedIn) {
       router.replace('/dashboard')
     } else {
