@@ -1,4 +1,4 @@
-import LoginForm from '@/components/LoginForm'
+import LoginForm from '@/app/components/LoginForm'
 import Link from 'next/link'
 import React from 'react'
 

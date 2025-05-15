@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {/* Footer */}
                 <div className="p-4 border-t border-gray-700 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <img src="/placeholder-user.jpg" alt="Usuario" className="h-8 w-8 rounded-full" />
+                        <img src="/usuario.png" alt="Usuario" className="h-8 w-8 rounded-full" />
                         <div>
                             <p className="text-sm font-medium">Admin</p>
                             <p className="text-xs text-gray-400">admin@sga.com</p>

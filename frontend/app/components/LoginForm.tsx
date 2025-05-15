@@ -13,7 +13,35 @@ export default function LoginForm() {
 
 
     const onSubmit = async (e: React.FormEvent) => {
-        console.log('bien')
+        e.preventDefault()
+        setIsLoading(true)
+
+        // Simulate a login request
+        setTimeout(() => {
+            setIsLoading(false)
+            fetch('/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud')
+                    }
+                    return response.json()
+                })
+                .then((data) => {
+                    console.log(data)
+                    // Redirigir a la página de inicio
+                    window.location.href = '/dashboard'
+                })
+                .catch((error) => {
+                    console.error(error)
+                    alert('Error al iniciar sesión')
+            })
+        }, 2000)
     }
 
     return (
