@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/app/components/DashboardLayout'
 import DashboardHome from '@/app/components/DashboardHome'
 
 export default function DashboardPage() {
