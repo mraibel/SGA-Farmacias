@@ -1,20 +1,21 @@
-// app/page.tsx
 'use client'
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import DashboardLayout from '@/components/DashboardLayout'
+import DashboardHome from '@/components/DashboardHome'
 
-export default function Home() {
+export default function DashboardPage() {
   const router = useRouter()
 
   useEffect(() => {
     const isLoggedIn: boolean = true
-    if (isLoggedIn) {
-      router.replace('/dashboard')
-    } else {
+    if (!isLoggedIn) {
       router.replace('/login')
     }
   }, [])
 
-  return <p>Redirigiendo...</p>
+  return (
+    <DashboardHome />
+  )
 }
