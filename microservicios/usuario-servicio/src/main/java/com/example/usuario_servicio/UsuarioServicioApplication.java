@@ -17,6 +17,4 @@ public class UsuarioServicioApplication {
 	public String home() {
 		return "Cambio efectuado y visto!";
 	}
-
-	
 }
