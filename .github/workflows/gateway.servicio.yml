@@ -22,7 +22,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Give execution permission to mvnw
-      run: chmod +x microservicios/microservice-eureka/mvnw
+      run: chmod +x microservicios/microservice-gateway/mvnw
 
     - name: Build the Spring Boot app
       run: |

@@ -9,4 +9,5 @@ public class MicroserviceGatewayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MicroserviceGatewayApplication.class, args);
 	}
+
 }
