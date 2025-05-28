@@ -5,8 +5,8 @@ import React, { useState } from 'react'
 
 export default function LoginForm() {
 
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
+    const [correo, setCorreo] = useState<string>('')
+    const [contrasena, setContrasena] = useState<string>('')
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -23,7 +23,7 @@ export default function LoginForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ correo, contrasena }),
             })
                 .then((response) => {
                     if (!response.ok) {
@@ -56,8 +56,8 @@ export default function LoginForm() {
                         type="text"
                         placeholder="nombre@ejemplo.com"
                         className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
                         disabled={isLoading}
                         required
                     />
@@ -78,8 +78,8 @@ export default function LoginForm() {
                             type={showPassword ? 'text' : 'password'}
                             placeholder="••••••••"
                             className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={contrasena}
+                            onChange={(e) => setContrasena(e.target.value)}
                             disabled={isLoading}
                             required
                         />

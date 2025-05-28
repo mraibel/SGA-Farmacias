@@ -1,9 +1,9 @@
-name: Build and Deploy Usuario Servicio
+name: Build and Deploy Gateway Servicio
 
 on:
   push:
     paths:
-      - 'microservicios/usuario-servicio/**'
+      - 'microservicios/microservice-gateway/**'
     branches:
       - main  # Cambia esto si tu rama principal se llama diferente
 
@@ -21,15 +21,18 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Give execution permission to mvnw
+      run: chmod +x microservicios/microservice-gateway/mvnw
+
     - name: Build the Spring Boot app
       run: |
-        cd microservicios/usuario-servicio
+        cd microservicios/microservice-gateway
         ./mvnw clean install
 
     - name: Build Docker image
       run: |
-        cd microservicios/usuario-servicio
-        docker build -t formidata/usuario-servicio:v1.1.0 .
+        cd microservicios/microservice-gateway
+        docker build -t formidata/microservice-gateway:v1.0.1 .
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
@@ -39,4 +42,4 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push formidata/usuario-servicio:v1.1.0
+        docker push formidata/microservice-gateway:v1.0.1
