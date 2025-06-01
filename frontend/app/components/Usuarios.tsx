@@ -58,12 +58,13 @@ export function Usuarios() {
   });
 
   useEffect(() => {
-    fetch("http://localhost:8082/api/usuarios")
+    fetch("http://localhost:8081/api/usuarios")
       .then((res) => res.json())
-      .then((data) => setUsuarios(data))
+      .then((data) => console.log(data))
+      .then((data: any) => setUsuarios(data))
       .catch((err) => console.error("Error al cargar usuarios:", err));
 
-    fetch("http://localhost:8082/api/roles")
+    fetch("http://localhost:8081/api/roles")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -84,7 +85,7 @@ export function Usuarios() {
       rol: { id: parseInt(nuevoUsuario.rolId) },
     };
 
-    const response = await fetch("http://localhost:8082/api/usuarios", {
+    const response = await fetch("http://localhost:8081/api/usuarios", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(usuario),
