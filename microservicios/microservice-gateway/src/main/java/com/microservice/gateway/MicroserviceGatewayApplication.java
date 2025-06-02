@@ -10,5 +10,4 @@ public class MicroserviceGatewayApplication {
 		SpringApplication.run(MicroserviceGatewayApplication.class, args);
 	}
 
-	
 }
