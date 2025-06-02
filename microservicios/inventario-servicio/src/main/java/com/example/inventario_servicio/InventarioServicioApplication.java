@@ -19,4 +19,5 @@ public class InventarioServicioApplication {
 	public String home() {
 		return "INVENTARIO";
 	}
+	
 }
