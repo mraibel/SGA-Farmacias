@@ -1,4 +1,3 @@
-aplication-test-yaml:
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -7,7 +6,7 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
 
 logging:
