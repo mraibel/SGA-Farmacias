@@ -58,7 +58,7 @@ export function Usuarios() {
   });
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/usuarios/usuariodatos")
+    fetch("http://localhost:8081/api/usuarios/usuariosdatos")
       .then((res) => res.json())
       .then((data) => console.log(data))
       .then((data: any) => setUsuarios(data))
