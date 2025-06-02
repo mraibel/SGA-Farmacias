@@ -45,9 +45,10 @@ export default function InventarioPage() {
   const [bodegasUnicas, setBodegasUnicas] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8083/api/productos")
+    fetch("http://localhost:8081/api/inventario/productos")
       .then((res) => res.json())
-      .then((data) => {
+      .then((data) => console.log(data))
+      .then((data: any) => {
         setProductos(data);
 
         // Extraer bodegas únicas
