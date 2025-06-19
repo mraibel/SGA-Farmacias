@@ -17,6 +17,6 @@ public class UsuarioServicioApplication {
 
 	@GetMapping("/")
 	public String home() {
-		return "Definitiva";
+		return "CD automatico?";
 	}
 }
