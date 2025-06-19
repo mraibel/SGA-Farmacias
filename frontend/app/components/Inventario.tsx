@@ -48,7 +48,6 @@ export default function InventarioPage() {
   useEffect(() => {
     fetch("http://localhost:8081/api/inventario/productos")
       .then((res) => res.json())
-      .then((data) => console.log(data))
       .then((data: any) => {
         setProductos(data);
 
