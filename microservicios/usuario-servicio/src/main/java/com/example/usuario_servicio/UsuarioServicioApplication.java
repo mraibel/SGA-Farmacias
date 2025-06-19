@@ -2,9 +2,11 @@ package com.example.usuario_servicio;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@EnableDiscoveryClient
 @SpringBootApplication
 @RestController
 public class UsuarioServicioApplication {
@@ -15,6 +17,6 @@ public class UsuarioServicioApplication {
 
 	@GetMapping("/")
 	public String home() {
-		return "Cambio para ver en el pc del Tomás Vásquez Goldenberg";
+		return "CD automatico?";
 	}
 }

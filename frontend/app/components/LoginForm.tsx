@@ -10,6 +10,7 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -18,7 +19,7 @@ export default function LoginForm() {
         // Simulate a login request
         setTimeout(() => {
             setIsLoading(false)
-            fetch('http://localhost:8082/api/usuarios/login', {
+            fetch(`${apiUrl}/usuarios/usuariosdatos/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
