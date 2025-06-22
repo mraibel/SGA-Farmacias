@@ -358,10 +358,6 @@ export function Pacientes() {
                     <DropdownMenuItem onClick={() => handleEliminarPaciente(paciente.id)}>
                       Eliminar
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => alert(`Ver detalles de paciente ${paciente.id}`)}>
-                      Ver Detalles
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
