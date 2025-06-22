@@ -12,7 +12,7 @@ import com.microservice.pacientes.pacientes_servicio.repository.PacienteReposito
 
 @Service
 public class PacienteService {
-    
+
     @Autowired
     private PacienteRepository pacienteRepository;
 
@@ -26,30 +26,30 @@ public class PacienteService {
     public PacienteDTO guardar(PacienteDTO paciente) {
         Paciente nuevoPaciente = convertDTOToEntity(paciente);
         return convertEntityToDTO(pacienteRepository.save(nuevoPaciente));
-    } 
+    }
 
     public PacienteDTO obtenerPorId(Long id) {
         Paciente paciente = pacienteRepository.findById(id).orElse(null);
         if (paciente != null) {
             return convertEntityToDTO(paciente);
         } else {
-            return null; 
+            return null;
         }
     }
-    
+
     public void eliminar(Long id) {
-        Paciente paciente = pacienteRepository.findById(id).orElse(null);
-        if (paciente != null) {
-            paciente.setEstado(false); // Cambia el estado a inactivo
-            pacienteRepository.save(paciente);
+        if (pacienteRepository != null) {
+            pacienteRepository.deleteById(id);
         }
     }
 
     public boolean actualizar(PacienteDTO pacienteDTO, Long id) {
-        if (pacienteDTO == null) return false;
+        if (pacienteDTO == null)
+            return false;
 
         Paciente pacienteActualizado = pacienteRepository.findById(id).orElse(null);
-        if (pacienteActualizado == null) return false;
+        if (pacienteActualizado == null)
+            return false;
 
         if (pacienteDTO.getNombre() != null) {
             pacienteActualizado.setNombre(pacienteDTO.getNombre());
@@ -72,11 +72,13 @@ public class PacienteService {
         if (pacienteDTO.getFechaNacimiento() != null) {
             pacienteActualizado.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
         }
+        pacienteActualizado.setEstado(pacienteDTO.isEstado());
+
         pacienteRepository.saveAndFlush(pacienteActualizado);
         return true;
     }
 
-    /*  AUXILIARES  */
+    /* AUXILIARES */
     public PacienteDTO convertEntityToDTO(Paciente paciente) {
         PacienteDTO pacienteDTO = new PacienteDTO();
         pacienteDTO.setId(paciente.getId());
@@ -87,6 +89,7 @@ public class PacienteService {
         pacienteDTO.setCorreo(paciente.getCorreo());
         pacienteDTO.setDireccion(paciente.getDireccion());
         pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
+        pacienteDTO.setEstado(paciente.getEstado());
         return pacienteDTO;
     }
 
@@ -102,7 +105,7 @@ public class PacienteService {
         paciente.setCorreo(pacienteDTO.getCorreo());
         paciente.setDireccion(pacienteDTO.getDireccion());
         paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
-        paciente.setEstado(true);
+        paciente.setEstado(pacienteDTO.isEstado());
         return paciente;
     }
 
@@ -110,10 +113,12 @@ public class PacienteService {
         List<PacienteDTO> listaPacientesDTO = new ArrayList<PacienteDTO>();
         for (Paciente paciente : listaPacientes) {
             PacienteDTO pacienteDTO = new PacienteDTO();
+            pacienteDTO.setId(paciente.getId());
             pacienteDTO.setNombre(paciente.getNombre());
             pacienteDTO.setApellido(paciente.getApellido());
             pacienteDTO.setRut(paciente.getRut());
             pacienteDTO.setTelefono(paciente.getTelefono());
+            pacienteDTO.setEstado(paciente.getEstado());
             pacienteDTO.setCorreo(paciente.getCorreo());
             pacienteDTO.setDireccion(paciente.getDireccion());
             pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
@@ -121,5 +126,5 @@ public class PacienteService {
         }
 
         return listaPacientesDTO;
-    }   
+    }
 }

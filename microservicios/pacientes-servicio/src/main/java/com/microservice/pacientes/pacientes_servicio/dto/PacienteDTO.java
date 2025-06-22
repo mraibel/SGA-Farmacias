@@ -12,6 +12,7 @@ public class PacienteDTO {
     private String rut;
     private int telefono;
     private String correo;
+    private boolean estado;
     private String direccion;
     private Date fechaNacimiento;
 }
