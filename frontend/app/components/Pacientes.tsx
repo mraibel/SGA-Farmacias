@@ -113,7 +113,7 @@ export function Pacientes() {
     }
 
     try {
-      const url = `${apiUrl}/pacientes/pacientes` + (editandoPaciente ? `/editar/${editandoPaciente.id}` : ``);
+      const url = `${apiUrl}/pacientes/pacientes` + (editandoPaciente ? `/${editandoPaciente.id}` : ``);
       const method = editandoPaciente ? 'PUT' : 'POST';
       const response = await fetch(url, {
         method,
@@ -174,7 +174,7 @@ export function Pacientes() {
     if (!confirm) return;
     
     try {
-      const response = await fetch(`${apiUrl}/pacientes/pacientes/eliminar/${pacienteId}`, {
+      const response = await fetch(`${apiUrl}/pacientes/pacientes/${pacienteId}`, {
         method: 'DELETE',
       });
 

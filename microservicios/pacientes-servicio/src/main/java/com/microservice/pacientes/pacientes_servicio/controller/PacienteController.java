@@ -38,13 +38,13 @@ public class PacienteController {
         return ResponseEntity.ok(nuevoPaciente);
     }
 
-    @DeleteMapping("/eliminar/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarPaciente(@PathVariable Long id) {
         pacienteService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/editar/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PacienteDTO> actualizarPaciente(@RequestBody PacienteDTO pacienteDTO, @PathVariable Long id) {
         boolean actualizado = pacienteService.actualizar(pacienteDTO, id);
         if (actualizado) {
