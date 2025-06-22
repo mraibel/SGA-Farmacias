@@ -1,14 +1,13 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import React, { useState } from 'react'
+import Link from "next/link";
+import React, { useState } from "react";
 
 export default function LoginForm() {
-
-    const [correo, setCorreo] = useState<string>('')
-    const [contrasena, setContrasena] = useState<string>('')
-    const [showPassword, setShowPassword] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [correo, setCorreo] = useState<string>("");
+  const [contrasena, setContrasena] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -64,44 +63,44 @@ export default function LoginForm() {
                     />
                 </div>
 
-                <div>
-                    <div className="flex items-center justify-between mb-1">
-                        <label htmlFor="password" className="text-sm font-medium">
-                            Contraseña
-                        </label>
-                        <Link href="#" className="text-sm text-blue-600 hover:underline">
-                            ¿Olvidó su contraseña?
-                        </Link>
-                    </div>
-                    <div className="relative">
-                        <input
-                            id="password"
-                            type={showPassword ? 'text' : 'password'}
-                            placeholder="••••••••"
-                            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={contrasena}
-                            onChange={(e) => setContrasena(e.target.value)}
-                            disabled={isLoading}
-                            required
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 px-3 text-sm text-gray-500 focus:outline-none"
-                        >
-                            {showPassword ? 'Ocultar' : 'Mostrar'}
-                        </button>
-                    </div>
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-600 transition-colors"
-                >
-                    {isLoading ? 'Cargando...' : 'Iniciar sesión'}
-                </button>
-            </form>
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <label htmlFor="password" className="text-sm font-medium">
+              Contraseña
+            </label>
+            <Link href="#" className="text-sm text-blue-600 hover:underline">
+              ¿Olvidó su contraseña?
+            </Link>
+          </div>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={contrasena}
+              onChange={(e) => setContrasena(e.target.value)}
+              disabled={isLoading}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 px-3 text-sm text-gray-500 focus:outline-none"
+            >
+              {showPassword ? "Ocultar" : "Mostrar"}
+            </button>
+          </div>
         </div>
-    )
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-600 transition-colors"
+        >
+          {isLoading ? "Cargando..." : "Iniciar sesión"}
+        </button>
+      </form>
+    </div>
+  );
 }

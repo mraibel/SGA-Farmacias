@@ -48,6 +48,10 @@ export function Usuarios() {
   const [searchTerm, setSearchTerm] = useState("");
   const [rolFiltro, setRolFiltro] = useState("todos");
   const [openNewUserDialog, setOpenNewUserDialog] = useState(false);
+  const [usuarioAEliminar, setUsuarioAEliminar] = useState<Usuario | null>(
+    null
+  );
+  const [openEliminarDialog, setOpenEliminarDialog] = useState(false);
 
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: "",
@@ -56,6 +60,7 @@ export function Usuarios() {
     contrasena: "",
     rolId: "",
   });
+
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -117,6 +122,25 @@ export function Usuarios() {
     return coincideNombre && coincideRol;
   });
 
+  const handleEliminarUsuario = async () => {
+    if (!usuarioAEliminar) return;
+
+    const response = await fetch(
+      `${apiUrl}/usuarios/usuariosdatos/` + usuarioAEliminar.id,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      setUsuarios(usuarios.filter((u) => u.id !== usuarioAEliminar.id));
+      setUsuarioAEliminar(null);
+      setOpenEliminarDialog(false);
+    } else {
+      alert("Error al eliminar el usuario");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -151,7 +175,7 @@ export function Usuarios() {
 
         <Dialog open={openNewUserDialog} onOpenChange={setOpenNewUserDialog}>
           <DialogTrigger asChild>
-            <Button>Nuevo Usuario</Button>
+            <Button className="bg-blue-500 text-white">Nuevo Usuario</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -247,6 +271,7 @@ export function Usuarios() {
             <TableHead>Apellido</TableHead>
             <TableHead>Correo</TableHead>
             <TableHead>Rol</TableHead>
+            <TableHead>Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -256,10 +281,46 @@ export function Usuarios() {
               <TableCell>{usuario.apellido}</TableCell>
               <TableCell>{usuario.correo}</TableCell>
               <TableCell>{usuario.rol?.tipo ?? "Sin rol"}</TableCell>
+              <TableCell>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    setUsuarioAEliminar(usuario);
+                    setOpenEliminarDialog(true);
+                  }}
+                >
+                  Eliminar
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Dialog open={openEliminarDialog} onOpenChange={setOpenEliminarDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar eliminación</DialogTitle>
+          </DialogHeader>
+          <p>
+            ¿Estás seguro de que deseas eliminar al usuario{" "}
+            <strong>
+              {usuarioAEliminar?.nombre} {usuarioAEliminar?.apellido}
+            </strong>
+            ?
+          </p>
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => setOpenEliminarDialog(false)}
+            >
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleEliminarUsuario}>
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

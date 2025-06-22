@@ -5,7 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "stock")
@@ -26,12 +26,12 @@ public class Stock {
     private LocalDate vencimiento;
 
     @ManyToOne
-    @JoinColumn(name = "producto_id")
-    @JsonIgnoreProperties("stocks")
-    private Producto producto;
+@JoinColumn(name = "producto_id")
+@JsonBackReference("producto-stock")
+private Producto producto;
 
-    @ManyToOne
-    @JoinColumn(name = "bodega_id")
-    @JsonIgnoreProperties("stocks")
-    private Bodega bodega;
+@ManyToOne
+@JoinColumn(name = "bodega_id")
+@JsonBackReference("bodega-stock")
+private Bodega bodega;
 }

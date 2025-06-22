@@ -1,7 +1,6 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Filter, Search, AlertCircle } from "lucide-react";
 import {
   Card,
@@ -36,6 +35,15 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function InventarioPage() {
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -45,8 +53,31 @@ export default function InventarioPage() {
   );
   const [bodegasUnicas, setBodegasUnicas] = useState<string[]>([]);
 
+  //Eliminar Producto
+  const [openEliminarDialog, setOpenEliminarDialog] = useState(false);
+  const [productoAEliminar, setProductoAEliminar] = useState<Producto | null>(
+    null
+  );
+
+  // Editar Producto
+  const [productoAEditar, setProductoAEditar] = useState<Producto | null>(null);
+  const [openEditarDialog, setOpenEditarDialog] = useState(false);
+
+  const [nuevoProducto, setNuevoProducto] = useState({
+    nombre: "",
+    descripcion: "",
+    categoria: "",
+    precioCosto: 0,
+    precioVenta: 0,
+  });
+
+  //===========================================================================================================/
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  // Cargar productos al iniciar
   useEffect(() => {
-    fetch("http://localhost:8081/api/inventario/productos")
+    fetch(`${apiUrl}/inventario/productos`)
       .then((res) => res.json())
       .then((data: any) => {
         setProductos(data);
@@ -65,6 +96,43 @@ export default function InventarioPage() {
       .catch((err) => console.error("Error al cargar productos:", err));
   }, []);
 
+  // MANEJO CREACIÓN DE UN PRODUCTO
+  const handleCrearProducto = async () => {
+    const producto = {
+      nombre: nuevoProducto.nombre,
+      descripcion: nuevoProducto.descripcion,
+      categoria: nuevoProducto.categoria,
+      precioCosto: nuevoProducto.precioCosto,
+      precioVenta: nuevoProducto.precioVenta,
+      stocks: [],
+    };
+
+    try {
+      const res = await fetch(`${apiUrl}/inventario/productos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(producto),
+      });
+
+      if (res.ok) {
+        const creado = await res.json();
+        setProductos((prev) => [...prev, creado]);
+        setNuevoProducto({
+          nombre: "",
+          descripcion: "",
+          categoria: "",
+          precioCosto: 0,
+          precioVenta: 0,
+        });
+      } else {
+        console.error("Error al crear producto");
+      }
+    } catch (error) {
+      console.error("Error de red al crear producto:", error);
+    }
+  };
+
+  // Filtrar productos por nombre/código y bodega
   const productosFiltrados = productos.filter((producto) => {
     const coincideFiltro =
       producto.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -82,6 +150,76 @@ export default function InventarioPage() {
   const criticalStock = productos.flatMap((producto) =>
     producto.stocks.filter((stock) => stock.cantidad < 100)
   );
+
+  const handleEliminarProducto = async () => {
+    if (!productoAEliminar) return;
+
+    const response = await fetch(
+      `${apiUrl}/inventario/productos/` + productoAEliminar.id,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      setProductos(productos.filter((p) => p.id !== productoAEliminar.id));
+      setProductoAEliminar(null);
+      setOpenEliminarDialog(false);
+    } else {
+      console.error("Error al eliminar producto");
+      alert("Error al eliminar el producto");
+    }
+  };
+
+  // MANEJO EDITAR PRODUCTO
+
+  const abrirDialogoEditar = (producto: Producto) => {
+    setProductoAEditar(producto);
+    setNuevoProducto({
+      nombre: producto.nombre,
+      descripcion: producto.descripcion,
+      categoria: producto.categoria,
+      precioCosto: producto.precioCosto,
+      precioVenta: producto.precioVenta,
+    });
+    setOpenEditarDialog(true);
+  };
+
+  const handleActualizarProducto = async () => {
+    if (!productoAEditar) return;
+
+    const actualizado = {
+      ...productoAEditar,
+      nombre: nuevoProducto.nombre,
+      descripcion: nuevoProducto.descripcion,
+      categoria: nuevoProducto.categoria,
+      precioCosto: nuevoProducto.precioCosto,
+      precioVenta: nuevoProducto.precioVenta,
+    };
+
+    const res = await fetch(
+      `${apiUrl}/inventario/productos/${productoAEditar.id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(actualizado),
+      }
+    );
+
+    if (res.ok) {
+      const productoActualizado = await res.json();
+      setProductos((prev) =>
+        prev.map((p) =>
+          p.id === productoActualizado.id ? productoActualizado : p
+        )
+      );
+      setProductoAEditar(null);
+      setOpenEditarDialog(false);
+    } else {
+      console.error("Error al actualizar producto");
+      alert("Error al actualizar el producto");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -146,6 +284,85 @@ export default function InventarioPage() {
                     </Command>
                   </PopoverContent>
                 </Popover>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="default"
+                      className="bg-blue-500 text-white hover:bg-blue-600"
+                    >
+                      Nuevo Producto
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Crear nuevo producto</DialogTitle>
+                      <DialogDescription>
+                        Ingresa los datos para añadir un nuevo producto al
+                        inventario.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    {/* FORMULARIO DEL PRODUCTO */}
+                    <div className="grid gap-4 py-4">
+                      <Input
+                        placeholder="Nombre"
+                        value={nuevoProducto.nombre}
+                        onChange={(e) =>
+                          setNuevoProducto({
+                            ...nuevoProducto,
+                            nombre: e.target.value,
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="Descripción"
+                        value={nuevoProducto.descripcion}
+                        onChange={(e) =>
+                          setNuevoProducto({
+                            ...nuevoProducto,
+                            descripcion: e.target.value,
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="Categoría"
+                        value={nuevoProducto.categoria}
+                        onChange={(e) =>
+                          setNuevoProducto({
+                            ...nuevoProducto,
+                            categoria: e.target.value,
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="Precio costo"
+                        type="number"
+                        value={nuevoProducto.precioCosto}
+                        onChange={(e) =>
+                          setNuevoProducto({
+                            ...nuevoProducto,
+                            precioCosto: parseFloat(e.target.value),
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="Precio venta"
+                        type="number"
+                        value={nuevoProducto.precioVenta}
+                        onChange={(e) =>
+                          setNuevoProducto({
+                            ...nuevoProducto,
+                            precioVenta: parseFloat(e.target.value),
+                          })
+                        }
+                      />
+                    </div>
+
+                    <DialogFooter>
+                      <Button onClick={handleCrearProducto}>Crear</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
 
@@ -177,6 +394,7 @@ export default function InventarioPage() {
                     <TableHead>Cantidad</TableHead>
                     <TableHead>Vencimiento</TableHead>
                     <TableHead>Estado</TableHead>
+                    <TableHead>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -217,6 +435,25 @@ export default function InventarioPage() {
                                 </Badge>
                               )}
                             </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="destructive"
+                                onClick={() => {
+                                  setProductoAEliminar(producto);
+                                  setOpenEliminarDialog(true);
+                                }}
+                                className="mr-2"
+                              >
+                                Eliminar
+                              </Button>
+                              <Button
+                                variant="outline"
+                                onClick={() => abrirDialogoEditar(producto)}
+                                className="mr-2"
+                              >
+                                Editar
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         );
                       })
@@ -238,11 +475,125 @@ export default function InventarioPage() {
                           Sin stock disponible
                         </TableCell>
                         <TableCell></TableCell>
+                        <TableCell>
+                          <Button
+                            variant="destructive"
+                            onClick={() => {
+                              setProductoAEliminar(producto);
+                              setOpenEliminarDialog(true);
+                            }}
+                          >
+                            Eliminar
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     )
                   )}
                 </TableBody>
               </Table>
+              <Dialog
+                open={openEliminarDialog}
+                onOpenChange={setOpenEliminarDialog}
+              >
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Confirmar eliminación</DialogTitle>
+                  </DialogHeader>
+                  <p>
+                    ¿Estás seguro de que deseas eliminar al usuario{" "}
+                    <strong>{productoAEliminar?.nombre}</strong>?
+                  </p>
+                  <DialogFooter>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setOpenEliminarDialog(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={handleEliminarProducto}
+                    >
+                      Eliminar
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog
+                open={openEditarDialog}
+                onOpenChange={setOpenEditarDialog}
+              >
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Editar producto</DialogTitle>
+                    <DialogDescription>
+                      Modifica los campos necesarios.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="grid gap-4 py-4">
+                    <Input
+                      placeholder="Nombre"
+                      value={nuevoProducto.nombre}
+                      onChange={(e) =>
+                        setNuevoProducto({
+                          ...nuevoProducto,
+                          nombre: e.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      placeholder="Descripción"
+                      value={nuevoProducto.descripcion}
+                      onChange={(e) =>
+                        setNuevoProducto({
+                          ...nuevoProducto,
+                          descripcion: e.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      placeholder="Categoría"
+                      value={nuevoProducto.categoria}
+                      onChange={(e) =>
+                        setNuevoProducto({
+                          ...nuevoProducto,
+                          categoria: e.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      placeholder="Precio costo"
+                      type="number"
+                      value={nuevoProducto.precioCosto}
+                      onChange={(e) =>
+                        setNuevoProducto({
+                          ...nuevoProducto,
+                          precioCosto: parseFloat(e.target.value),
+                        })
+                      }
+                    />
+                    <Input
+                      placeholder="Precio venta"
+                      type="number"
+                      value={nuevoProducto.precioVenta}
+                      onChange={(e) =>
+                        setNuevoProducto({
+                          ...nuevoProducto,
+                          precioVenta: parseFloat(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+
+                  <DialogFooter>
+                    <Button onClick={handleActualizarProducto}>
+                      Actualizar
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
         </TabsContent>

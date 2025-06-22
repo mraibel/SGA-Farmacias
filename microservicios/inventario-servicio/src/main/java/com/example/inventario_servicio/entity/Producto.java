@@ -32,6 +32,6 @@ public class Producto {
     private String categoria;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "producto-stock")
-    private List<Stock> stocks;
+@JsonManagedReference("producto-stock")
+private List<Stock> stocks;
 }
