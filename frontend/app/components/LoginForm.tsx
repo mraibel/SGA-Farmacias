@@ -9,56 +9,59 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
-    // Simulate a login request
-    setTimeout(() => {
-      setIsLoading(false);
-      fetch("http://localhost:8081/api/usuarios/usuariosdatos/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ correo, contrasena }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error en la solicitud");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          // Redirigir a la página de inicio
-          window.location.href = "/dashboard";
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("Error al iniciar sesión");
-        });
-    }, 2000);
-  };
+    const onSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsLoading(true)
 
-  return (
-    <div className="grid gap-6">
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Usuario o Email
-          </label>
-          <input
-            id="email"
-            type="text"
-            placeholder="nombre@ejemplo.com"
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-            disabled={isLoading}
-            required
-          />
-        </div>
+        // Simulate a login request
+        setTimeout(() => {
+            setIsLoading(false)
+            fetch(`${apiUrl}/usuarios/usuariosdatos/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ correo, contrasena }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud')
+                    }
+                    return response.json()
+                })
+                .then((data) => {
+                    console.log(data)
+                    // Redirigir a la página de inicio
+                    window.location.href = '/dashboard'
+                })
+                .catch((error) => {
+                    console.error(error)
+                    alert('Error al iniciar sesión')
+            })
+        }, 2000)
+    }
+
+    return (
+        <div className="grid gap-6">
+
+            <form onSubmit={onSubmit} className='flex flex-col gap-4'>
+                <div>
+                    <label htmlFor="email" className="block text-sm font-medium mb-1">
+                        Usuario o Email
+                    </label>
+                    <input
+                        id="email"
+                        type="text"
+                        placeholder="nombre@ejemplo.com"
+                        className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
+                        disabled={isLoading}
+                        required
+                    />
+                </div>
 
         <div>
           <div className="flex items-center justify-between mb-1">

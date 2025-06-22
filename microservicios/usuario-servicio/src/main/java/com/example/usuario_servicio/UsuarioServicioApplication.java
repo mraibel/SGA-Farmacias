@@ -17,6 +17,6 @@ public class UsuarioServicioApplication {
 
 	@GetMapping("/")
 	public String home() {
-		return "Cambio para ver en el pc del Tomás Vásquez Goldenberg";
+		return "Mostar al pipe";
 	}
 }
