@@ -24,6 +24,6 @@ public class Bodega {
     private String ubicacion;
 
     @OneToMany(mappedBy = "bodega", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "bodega-stock")
-    private List<Stock> stocks;
+@JsonManagedReference("bodega-stock")
+private List<Stock> stocks;
 }

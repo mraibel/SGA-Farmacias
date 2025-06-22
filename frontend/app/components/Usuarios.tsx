@@ -48,6 +48,10 @@ export function Usuarios() {
   const [searchTerm, setSearchTerm] = useState("");
   const [rolFiltro, setRolFiltro] = useState("todos");
   const [openNewUserDialog, setOpenNewUserDialog] = useState(false);
+  const [usuarioAEliminar, setUsuarioAEliminar] = useState<Usuario | null>(
+    null
+  );
+  const [openEliminarDialog, setOpenEliminarDialog] = useState(false);
 
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: "",
@@ -57,13 +61,15 @@ export function Usuarios() {
     rolId: "",
   });
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
-    fetch("http://localhost:8081/api/usuarios/usuariosdatos")
+    fetch(`${apiUrl}/usuarios/usuariosdatos`)
       .then((res) => res.json())
       .then((data: any) => setUsuarios(data))
       .catch((err) => console.error("Error al cargar usuarios:", err));
 
-    fetch("http://localhost:8081/api/usuarios/roles")
+    fetch(`${apiUrl}/usuarios/roles`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -84,7 +90,7 @@ export function Usuarios() {
       rol: { id: parseInt(nuevoUsuario.rolId) },
     };
 
-    const response = await fetch("http://localhost:8081/api/usuarios/usuariosdatos", {
+    const response = await fetch(`${apiUrl}/usuarios/usuariosdatos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(usuario),
@@ -114,6 +120,25 @@ export function Usuarios() {
       rolFiltro === "todos" || u.rol?.id === parseInt(rolFiltro);
     return coincideNombre && coincideRol;
   });
+
+  const handleEliminarUsuario = async () => {
+    if (!usuarioAEliminar) return;
+
+    const response = await fetch(
+      `${apiUrl}/usuarios/usuariosdatos/` + usuarioAEliminar.id,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      setUsuarios(usuarios.filter((u) => u.id !== usuarioAEliminar.id));
+      setUsuarioAEliminar(null);
+      setOpenEliminarDialog(false);
+    } else {
+      alert("Error al eliminar el usuario");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -149,7 +174,7 @@ export function Usuarios() {
 
         <Dialog open={openNewUserDialog} onOpenChange={setOpenNewUserDialog}>
           <DialogTrigger asChild>
-            <Button>Nuevo Usuario</Button>
+            <Button className="bg-blue-500 text-white">Nuevo Usuario</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -245,6 +270,7 @@ export function Usuarios() {
             <TableHead>Apellido</TableHead>
             <TableHead>Correo</TableHead>
             <TableHead>Rol</TableHead>
+            <TableHead>Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -254,10 +280,46 @@ export function Usuarios() {
               <TableCell>{usuario.apellido}</TableCell>
               <TableCell>{usuario.correo}</TableCell>
               <TableCell>{usuario.rol?.tipo ?? "Sin rol"}</TableCell>
+              <TableCell>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    setUsuarioAEliminar(usuario);
+                    setOpenEliminarDialog(true);
+                  }}
+                >
+                  Eliminar
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Dialog open={openEliminarDialog} onOpenChange={setOpenEliminarDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar eliminación</DialogTitle>
+          </DialogHeader>
+          <p>
+            ¿Estás seguro de que deseas eliminar al usuario{" "}
+            <strong>
+              {usuarioAEliminar?.nombre} {usuarioAEliminar?.apellido}
+            </strong>
+            ?
+          </p>
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => setOpenEliminarDialog(false)}
+            >
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleEliminarUsuario}>
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

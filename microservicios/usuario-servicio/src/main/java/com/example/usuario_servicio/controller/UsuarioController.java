@@ -28,6 +28,19 @@ public class UsuarioController {
         return usuarioService.guardar(usuario);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Long id) {
+        Optional<Usuario> usuarioOpt = usuarioService.obtenerTodos().stream()
+                .filter(usuario -> usuario.getId().equals(id))
+                .findFirst();
+
+        if (usuarioOpt.isPresent()) {
+            return ResponseEntity.ok(usuarioOpt.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public void eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminar(id);
