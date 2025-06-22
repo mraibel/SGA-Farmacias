@@ -24,6 +24,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Badge
+} from "@/components/ui/badge";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -337,7 +341,11 @@ export function Pacientes() {
               <TableCell>{paciente.rut}</TableCell>
               <TableCell>{paciente.correo ?? "—"}</TableCell>
               <TableCell>{paciente.telefono ?? "—"}</TableCell>
-              <TableCell>{paciente.estado === true ? "Activo" : "Inactivo"}</TableCell>
+              <TableCell>
+                <Badge variant={paciente.estado ? "success" : "destructive"}>
+                  {paciente.estado === true ? "Activo" : "Inactivo"}
+                  </Badge>
+                  </TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
