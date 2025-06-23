@@ -32,7 +32,7 @@ jobs:
     - name: Build Docker image
       run: |
         cd microservicios/microservice-eureka
-        docker build -t formidata/microservice-eureka:v1.0.2 .
+        docker build -t formidata/latest .
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
@@ -42,4 +42,4 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push formidata/microservice-eureka:v1.0.2
+        docker push formidata/latest

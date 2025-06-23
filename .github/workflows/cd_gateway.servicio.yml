@@ -1,0 +1,22 @@
+name: CD Gateway
+
+on:
+  workflow_run:
+    workflows: ["Build and Deploy Gateway Servicio"]
+    types:
+      - completed
+
+jobs:
+  redeploy:
+    name: Trigger redeploy on Render
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Call Render deploy API
+        run: |
+          curl -X POST https://api.render.com/v1/services/srv-d19mnvh5pdvs739ubog0/deploys \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}'
