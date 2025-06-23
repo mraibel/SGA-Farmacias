@@ -20,4 +20,5 @@ public class InventarioServicioApplication {
 		return "INVENTARIO";
 	}
 	
+	
 }
