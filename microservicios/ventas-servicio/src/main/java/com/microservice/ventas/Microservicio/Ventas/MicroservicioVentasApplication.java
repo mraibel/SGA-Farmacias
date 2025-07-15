@@ -1,4 +1,4 @@
-package com.example.inventario_servicio;
+package com.microservice.ventas.Microservicio.Ventas;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,16 +11,15 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @RestController
 @EnableFeignClients
-public class InventarioServicioApplication {
+public class MicroservicioVentasApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(InventarioServicioApplication.class, args);
+		SpringApplication.run(MicroservicioVentasApplication.class, args);
 	}
 
 	@GetMapping("/")
 	public String home() {
-		return "INVENTARIO";
+		return "Servicio de Ventas Activo";
 	}
-	
-	
+
 }

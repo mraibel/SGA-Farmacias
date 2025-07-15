@@ -26,4 +26,12 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 
+    public List<Producto> buscarPorIds(List<Long> ids) {
+        List<Producto> productos = productoRepository.findAllById(ids);
+        if (productos.isEmpty()) {
+            throw new RuntimeException("No se encontraron productos con los IDs proporcionados: " + ids);
+        }
+        return productos;
+    }
+
 }
