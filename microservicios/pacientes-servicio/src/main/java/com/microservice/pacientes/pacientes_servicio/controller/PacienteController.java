@@ -55,4 +55,14 @@ public class PacienteController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PacienteDTO> obtenerPacientePorId(@PathVariable Long id) {
+        PacienteDTO paciente = pacienteService.obtenerPorId(id);
+        if (paciente != null) {
+            return ResponseEntity.ok(paciente);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

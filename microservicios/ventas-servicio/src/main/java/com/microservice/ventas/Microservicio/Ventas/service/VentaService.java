@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.microservice.ventas.Microservicio.Ventas.client.PacienteCliente;
 import com.microservice.ventas.Microservicio.Ventas.entity.Estado;
 import com.microservice.ventas.Microservicio.Ventas.entity.Factura;
 import com.microservice.ventas.Microservicio.Ventas.entity.FacturaDetalle;
@@ -22,6 +23,8 @@ public class VentaService {
 
     @Autowired
     private VentaRepository ventaRepository;
+    @Autowired
+    private PacienteCliente pacienteCliente;
 
     public List<VentaDTO> obtenerVentas() {
         List<Venta> ventas = ventaRepository.findAll();
@@ -36,7 +39,9 @@ public class VentaService {
             ventaDTO.setId(venta.getId());
             ventaDTO.setFecha_venta(venta.getFecha());
             // Poner logica nombre paciente
-            ventaDTO.setNombre_paciente("Paciente " + venta.getPaciente_id()); // Placeholder, replace with actual logic
+            String nombrePaciente = pacienteCliente.obtenerPacientePorId(venta.getPaciente_id()).getNombre();
+            String apellidoPaciente = pacienteCliente.obtenerPacientePorId(venta.getPaciente_id()).getApellido();
+            ventaDTO.setNombre_paciente(nombrePaciente + " " + apellidoPaciente);
             ventaDTO.setTotal_productos(venta.getFactura().getDetalles().size());
             ventaDTO.setTotal_venta(venta.getFactura().getTotal());
             ventaDTO.setMetodo_pago(venta.getFactura().getMetodo_pago());
