@@ -3,13 +3,11 @@ package com.example.inventario_servicio.controller;
 import com.example.inventario_servicio.entity.Producto;
 import com.example.inventario_servicio.repository.ProductoRepository;
 import com.example.inventario_servicio.service.ProductoService;
-import com.netflix.discovery.converters.Auto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/productos")
@@ -30,7 +28,7 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
-    public void eliminarProducto(@PathVariable long id){
+    public void eliminarProducto(@PathVariable long id) {
         productoService.eliminar(id);
     }
 
@@ -42,7 +40,7 @@ public class ProductoController {
     @PutMapping("/{id}")
     public Producto actualizarProducto(@PathVariable Long id, @RequestBody Producto productoActualizado) {
         Producto productoExistente = productoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
 
         productoExistente.setNombre(productoActualizado.getNombre());
         productoExistente.setDescripcion(productoActualizado.getDescripcion());
@@ -51,6 +49,11 @@ public class ProductoController {
         productoExistente.setPrecioVenta(productoActualizado.getPrecioVenta());
 
         return productoRepository.save(productoExistente);
+    }
+
+    @GetMapping("/buscarPorIds")
+    public List<Producto> obtenerProductosPorIds(@RequestParam List<Long> ids) {
+        return productoService.buscarPorIds(ids);
     }
 
 }
