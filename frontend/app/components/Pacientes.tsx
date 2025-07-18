@@ -31,18 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-
-type Paciente = {
-  id: number;
-  nombre: string;
-  apellido: string;
-  rut: string;
-  direccion?: string;
-  telefono?: string;
-  estado: boolean;
-  correo?: string;
-  fechaNacimiento?: string;
-};
+import { Paciente } from "../interfaces/paciente";
 
 export function Pacientes() {
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
