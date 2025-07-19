@@ -42,25 +42,6 @@ export default function DashboardLayout({
         <nav className="flex-1 overflow-y-auto p-4 space-y-6">
           <div>
             <h2 className="text-sm font-semibold uppercase text-blue-800 mb-2">
-              Principal
-            </h2>
-            <ul className="space-y-2 text-white">
-              <li>
-                <Link
-                  href="/"
-                  className={`flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-400 ${
-                    pathname === "/" ? "bg-blue-600" : ""
-                  }`}
-                >
-                  <span>🏠</span>
-                  <span>Dashboard</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-sm font-semibold uppercase text-blue-800 mb-2">
               Módulos
             </h2>
             <ul className="space-y-2 text-white">
@@ -105,11 +86,6 @@ export default function DashboardLayout({
             <ul className="space-y-2 text-white">
               {[
                 { path: "/dashboard/users", label: "Usuarios", icon: "👤" },
-                {
-                  path: "/dashboard/configuration",
-                  label: "Configuración",
-                  icon: "⚙️",
-                },
               ].map((item) => (
                 <li key={item.path}>
                   <Link
