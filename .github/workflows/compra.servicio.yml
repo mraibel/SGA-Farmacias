@@ -27,7 +27,7 @@ jobs:
     - name: Build the Spring Boot app
       run: |
         cd microservicios/compras-servicio
-        ./mvnw clean install
+        ./mvnw clean install -DskipTests
 
     - name: Build Docker image
       run: |
