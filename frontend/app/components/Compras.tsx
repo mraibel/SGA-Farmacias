@@ -45,22 +45,26 @@ export default function ComprasPage() {
     proveedorId: "",
     numeroFactura: "",
     fecha: "",
-    notas: "",
     total: 0,
   });
   const [medicamentosProveedor, setMedicamentosProveedor] = useState<Medicamento[]>([]);
   const [proveedorSeleccionado, setProveedorSeleccionado] = useState<string>("");
   const [productoSeleccionado, setProductoSeleccionado] = useState<string>("");
   const [productosCompra, setProductosCompra] = useState<{ id: number, nombre: string, precio: number, cantidad: number }[]>([]);
+  const [tabValue, setTabValue] = useState("compras");
 
-  useEffect(() => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/compras`;
+
+  const fetchCompras = () => {
     fetch(`${apiUrl}/compras`)
       .then((res) => res.json())
       .then(setCompras)
       .catch(() => setCompras([]));
-  }, []);
+  };
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/compras`;
+  useEffect(() => {
+    fetchCompras();
+  }, []);
 
   // Obtener proveedores al montar
   useEffect(() => {
@@ -125,7 +129,6 @@ export default function ComprasPage() {
           total: totalCompra,
           proveedorId: Number(nuevaCompra.proveedorId),
           bodegaId: 1,
-          notas: nuevaCompra.notas || ""
         }),
       });
       if (!response.ok) throw new Error("Error al crear la compra");
@@ -133,7 +136,6 @@ export default function ComprasPage() {
         proveedorId: "",
         numeroFactura: "",
         fecha: "",
-        notas: "",
         total: 0,
       });
       setProductosCompra([]); 
@@ -198,7 +200,15 @@ export default function ComprasPage() {
           Gestión de compras, proveedores y recepción de productos
         </p>
       </div>
-      <Tabs defaultValue="compras" className="space-y-4">
+      <Tabs
+        defaultValue="compras"
+        value={tabValue}
+        onValueChange={(val) => {
+          setTabValue(val);
+          if (val === "compras") fetchCompras();
+        }}
+        className="space-y-4"
+      >
         <TabsList>
           <TabsTrigger value="compras">Compras</TabsTrigger>
           <TabsTrigger value="nueva">Nueva compra</TabsTrigger>
@@ -234,9 +244,7 @@ export default function ComprasPage() {
                     <TableHead>Fecha</TableHead>
                     <TableHead>Proveedor</TableHead>
                     <TableHead>N° Factura</TableHead>
-                    <TableHead>Bodega ID</TableHead>
                     <TableHead>Total</TableHead>
-                    <TableHead>Notas</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -247,9 +255,7 @@ export default function ComprasPage() {
                         {proveedores.find((p) => p.id === compra.proveedorId)?.nombre || compra.proveedorId}
                       </TableCell>
                       <TableCell>{compra.numeroFactura}</TableCell>
-                      <TableCell>{compra.bodegaId}</TableCell>
                       <TableCell>${compra.total.toLocaleString("es-CL")}</TableCell>
-                      <TableCell>{compra.notas}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -369,10 +375,6 @@ export default function ComprasPage() {
                   </Table>
                 </div>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
-                  <div className="flex flex-col w-full md:w-1/2">
-                    <label className="font-medium mb-1">Notas</label>
-                    <textarea className="border rounded-md p-2 min-h-[60px] text-sm" placeholder="Notas adicionales..." />
-                  </div>
                   <div className="flex flex-col items-end w-full md:w-1/2 mt-2 md:mt-0">
                     <span className="text-muted-foreground text-sm">Total</span>
                     <span className="text-3xl font-bold">
